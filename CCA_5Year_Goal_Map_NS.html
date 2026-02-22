@@ -1,0 +1,313 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5‑Year Goal Map – Continuing Care Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#3d2200;      /* deep slate */
+      --card:#161b22;    /* panel */
+      --ink:#e6edf3;     /* text */
+      --muted:#9fb0c3;   /* secondary */
+      --pri:#4cc9f0;     /* accent */
+      --pri-2:#82ffc3;   /* secondary accent */
+      --ok:#22c55e;      /* success */
+      --warn:#f59e0b;    /* warning */
+      --danger:#ef4444;  /* danger */
+      --border:#263041;  /* border */
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:radial-gradient(1200px 600px at 10% -10%, #3d2200 0%, transparent 60%),
+                           radial-gradient(900px 500px at 100% 0%, #3d2200 0%, transparent 60%),
+                           var(--bg);
+      color:var(--ink); font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height:1.5;
+    }
+    header{ position:sticky; top:0; z-index:10; backdrop-filter: blur(10px); background:rgba(14,17,22,.6); border-bottom:1px solid var(--border);}
+    .wrap{ max-width:1100px; margin:0 auto; padding:18px 20px; }
+
+    .title-row{ display:flex; flex-wrap:wrap; align-items:center; gap:18px; }
+    h1{
+      font-family:"Playfair Display", Georgia, serif; font-size:clamp(1.6rem, 2.4vw + 1rem, 2.8rem);
+      margin:0; letter-spacing:.3px; color:#ffffff;
+    }
+    .subtitle{color:var(--muted); font-size:.98rem}
+
+    main{ max-width:1100px; margin:24px auto; padding:0 20px 60px; }
+
+    .grid{ display:grid; grid-template-columns: repeat(12, 1fr); gap:18px; }
+    .card{ grid-column: span 12; background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+           border:1px solid var(--border); border-radius:14px; padding:18px; box-shadow:var(--shadow); }
+    @media (min-width: 860px){
+      .col-6{ grid-column: span 6; }
+      .col-4{ grid-column: span 4; }
+      .col-8{ grid-column: span 8; }
+    }
+
+    h2{ font-size:1.1rem; text-transform:uppercase; letter-spacing:.12rem; color:var(--pri); margin:2px 0 12px 0; }
+    h3{ font-size:1.02rem; margin:12px 0 8px; color:#dbe8f5; }
+    p, li, label{ font-size:.98rem; }
+
+    .row{ display:flex; gap:12px; flex-wrap:wrap; }
+    .chip{ padding:6px 10px; border:1px solid var(--border); border-radius:999px; color:#d7e3ef; background:rgba(130,255,195,.06);}    
+
+    .progress{ background:#0b0f14; border:1px solid var(--border); height:12px; border-radius:999px; overflow:hidden; }
+    .bar{ height:100%; background:linear-gradient(90deg, var(--pri), var(--pri-2)); width:0%; transition: width .6s ease; }
+
+    .kpi{ display:grid; grid-template-columns:1fr auto; gap:6px; align-items:center; padding:10px 12px; border:1px solid var(--border); border-radius:10px; }
+    .kpi strong{ font-size:1.05rem }
+
+    details{ border:1px solid var(--border); border-radius:12px; padding:10px 12px; background:rgba(76,201,240,.04); }
+    details[open]{ background:rgba(130,255,195,.06); }
+    summary{ cursor:pointer; list-style:none; }
+    summary::-webkit-details-marker{ display:none; }
+
+    .year{ display:grid; gap:10px; }
+    .tasks{ display:grid; gap:8px; margin-top:4px; }
+    .task{ display:flex; gap:8px; align-items:flex-start; padding:8px; border:1px dashed var(--border); border-radius:10px; }
+    .task input[type="checkbox"]{ transform:scale(1.2); margin-top:2px; }
+    .task small{ color:var(--muted) }
+
+    .note{ color:var(--muted); font-size:.9rem }
+    .muted{ color:var(--muted); }
+
+    .btn-row{ display:flex; gap:10px; flex-wrap:wrap; }
+    button, .btn{ background:linear-gradient(180deg, #1c2b3e, #162131); color:#e6f1ff; border:1px solid var(--border); padding:10px 14px; border-radius:10px; cursor:pointer; }
+    button:hover{ filter:brightness(1.15) }
+
+    .print-hint{ text-align:center; color:var(--muted); margin-top:10px; }
+
+    /* Print styles */
+    @media print{
+      header{ position:static; background:transparent; border:0 }
+      .card{ box-shadow:none; background:#fff; color:#000; border-color:#ccc }
+      body{ background:#fff; color:#000 }
+      a[href]:after{ content:" (" attr(href) ")"; font-size:.8rem }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap title-row">
+      <div>
+        <h1>5‑Year Goal Map — Continuing Care Assistant</h1>
+        <div class="subtitle">Region: Nova Scotia, Canada • Plan Owner: <input id="owner" value="Your Name" style="background:transparent;border:1px dashed var(--border);color:var(--ink);padding:2px 6px;border-radius:6px;"/></div>
+      </div>
+      <div class="btn-row" style="margin-left:auto">
+        <button id="saveBtn" title="Save progress locally">💾 Save</button>
+        <button id="resetBtn" title="Reset all checkboxes">♻️ Reset</button>
+        <button onclick="window.print()" title="Print or export to PDF">🖨️ Print</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="grid">
+      <div class="card col-8">
+        <h2>Vision & Values</h2>
+        <p><strong>Vision:</strong> Deliver empathetic, person‑centred care that preserves dignity and independence for older adults across Nova Scotia.</p>
+        <div class="row" style="margin-top:6px">
+          <span class="chip">Compassion</span>
+          <span class="chip">Safety</span>
+          <span class="chip">Cultural Humility</span>
+          <span class="chip">Teamwork</span>
+          <span class="chip">Continuous Learning</span>
+        </div>
+      </div>
+      <div class="card col-4">
+        <h2>Current Role Snapshot</h2>
+        <div class="kpi"><strong>Credential</strong><span>CCA (or in training)</span></div>
+        <div class="kpi"><strong>Setting</strong><span>Home care / LTC / Acute</span></div>
+        <div class="kpi"><strong>Target Specialty</strong><span>Dementia & Palliative</span></div>
+        <div class="kpi"><strong>Readiness</strong>
+          <div class="progress" aria-label="Overall readiness">
+            <div class="bar" id="readinessBar" style="width: 35%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card col-12">
+        <h2>Five‑Year Roadmap (SMART Milestones)</h2>
+        <p class="note">This roadmap emphasizes Nova Scotia‑relevant training (e.g., WHMIS, OHS, First Aid/CPR‑C & AED, Dementia training, LEAP for PSWs) and progressive responsibility—from strong bedside skills to mentorship and leadership.
+        </p>
+        <div class="grid" style="margin-top:8px">
+          <!-- Year 1 -->
+          <div class="card col-4 year">
+            <h3>Year 1 — Foundations</h3>
+            <p class="muted">Objective: Secure a CCA role/internship; master core competencies, infection control, and safe lifts/transfers.</p>
+            <div class="tasks">
+              <label class="task"><input type="checkbox"> <span>Complete/verify <strong>WHMIS</strong> and <strong>OHS</strong> orientation.</span></label>
+              <label class="task"><input type="checkbox"> <span>Maintain <strong>Intermediate First Aid – CPR‑C & AED</strong> (renewal cycle noted).</span></label>
+              <label class="task"><input type="checkbox"> <span>Finish employer on‑boarding; shadow senior CCAs on three shifts (days/evenings/nights).</span></label>
+              <label class="task"><input type="checkbox"> <span>Document 10 reflective learnings (communication, dementia behaviors, person‑centred care).</span></label>
+            </div>
+          </div>
+          <!-- Year 2 -->
+          <div class="card col-4 year">
+            <h3>Year 2 — Specialization</h3>
+            <p class="muted">Objective: Deepen dementia & palliative skills; become a go‑to teammate for safe, gentle care.</p>
+            <div class="tasks">
+              <label class="task"><input type="checkbox"> <span>Complete <strong>Dementia: Understanding the Journey</strong> (or equivalent).</span></label>
+              <label class="task"><input type="checkbox"> <span>Earn <strong>LEAP PSW</strong> (Palliative) certificate (≈10 hrs).</span></label>
+              <label class="task"><input type="checkbox"> <span>Lead 2+ team huddles on responsive behaviors & non‑pharm strategies.</span></label>
+              <label class="task"><input type="checkbox"> <span>Join a safety committee or complete a <strong>safe patient handling</strong> refresher.</span></label>
+            </div>
+          </div>
+          <!-- Year 3 -->
+          <div class="card col-4 year">
+            <h3>Year 3 — Advanced Practice</h3>
+            <p class="muted">Objective: Mentor peers, support orientation, and contribute to care quality projects.</p>
+            <div class="tasks">
+              <label class="task"><input type="checkbox"> <span>Precept at least one new CCA/student during orientation.</span></label>
+              <label class="task"><input type="checkbox"> <span>Complete education on <strong>delirium vs. dementia</strong> & pain assessment in late life.</span></label>
+              <label class="task"><input type="checkbox"> <span>Participate in a <strong>falls reduction</strong> or <strong>pressure injury</strong> QI project; present results.</span></label>
+              <label class="task"><input type="checkbox"> <span>Maintain annual <strong>infection prevention</strong> competencies & audits.</span></label>
+            </div>
+          </div>
+          <!-- Year 4 -->
+          <div class="card col-6 year">
+            <h3>Year 4 — Leadership & Influence</h3>
+            <p class="muted">Objective: Expand scope within role—education, scheduling support, family communication leadership.</p>
+            <div class="tasks">
+              <label class="task"><input type="checkbox"> <span>Co‑facilitate an in‑service on <strong>gentle persuasive approaches (GPA)</strong> or dementia communication.</span></label>
+              <label class="task"><input type="checkbox"> <span>Act as unit safety champion; track near‑misses & coach safe practices.</span></label>
+              <label class="task"><input type="checkbox"> <span>Complete <strong>end‑of‑life comfort measures</strong> micro‑credential (or refresh LEAP content).</span></label>
+              <label class="task"><input type="checkbox"> <span>Lead a small quality initiative—e.g., hydration rounds or music & memory pilot.</span></label>
+            </div>
+          </div>
+          <!-- Year 5 -->
+          <div class="card col-6 year">
+            <h3>Year 5 — Mastery & Career Options</h3>
+            <p class="muted">Objective: Position for senior CCA, scheduler/educator aide, or pathway to LPN/paramedicine if desired.</p>
+            <div class="tasks">
+              <label class="task"><input type="checkbox"> <span>Portfolio: compile letters, evaluations, CE certificates, and QI outcomes.</span></label>
+              <label class="task"><input type="checkbox"> <span>Apply for senior/lead CCA opportunities or cross‑train (acute/home transitions).</span></label>
+              <label class="task"><input type="checkbox"> <span>Explore bridging options (e.g., LPN programs) and entrance requirements.</span></label>
+              <label class="task"><input type="checkbox"> <span>Set 5‑to‑10‑year goals; update resume and LinkedIn with metrics.</span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card col-6">
+        <h2>Regulatory & Safety Checklist (NS)</h2>
+        <div class="tasks">
+          <label class="task"><input type="checkbox"> <span>Annual influenza education & vaccination (as applicable).</span></label>
+          <label class="task"><input type="checkbox"> <span><strong>WHMIS</strong> refresher per employer policy.</span></label>
+          <label class="task"><input type="checkbox"> <span><strong>Nova Scotia OHS</strong> orientation & site‑specific safety training.</span></label>
+          <label class="task"><input type="checkbox"> <span>Lift/transfer competencies and skin integrity prevention.</span></label>
+          <label class="task"><input type="checkbox"> <span>Privacy & confidentiality (PHIA) refreshers.</span></label>
+        </div>
+      </div>
+
+      <div class="card col-6">
+        <h2>Continuing Education & Networks</h2>
+        <ul>
+          <li>LEAP PSW updates; dementia care workshops; Gentle Persuasive Approaches (GPA).</li>
+          <li>Connect with NS Health, LTC associations, and local hospice societies.</li>
+          <li>Present a poster/talk at a facility education day by Year 4.</li>
+        </ul>
+      </div>
+
+      <div class="card col-12">
+        <h2>Metrics that Matter</h2>
+        <div class="grid">
+          <div class="kpi col-4"><strong>Resident/Client commendations</strong><span id="kpi1">0 / 6+</span></div>
+          <div class="kpi col-4"><strong>Education hours (annual)</strong><span id="kpi2">0 / 12+</span></div>
+          <div class="kpi col-4"><strong>Incidents/Near‑miss reports submitted</strong><span id="kpi3">0 / 4+</span></div>
+        </div>
+        <p class="note">Tip: quantify your impact (e.g., “Reduced responsive behaviors by 18% during Q2 pilot through music therapy and tailored routines”).</p>
+      </div>
+
+      <div class="card col-12">
+        <h2>Budget & Training Planner</h2>
+        <div class="grid">
+          <div class="col-6">
+            <h3>Planned Costs</h3>
+            <div class="tasks">
+              <label class="task"><input type="checkbox"> <span>LEAP PSW fee set aside.</span></label>
+              <label class="task"><input type="checkbox"> <span>GPA workshop / dementia course fees.</span></label>
+              <label class="task"><input type="checkbox"> <span>Uniforms, shoes, and equipment (annual refresh).</span></label>
+            </div>
+          </div>
+          <div class="col-6">
+            <h3>Funding Ideas</h3>
+            <ul>
+              <li>Employer‑sponsored education budgets or union funds (if applicable).</li>
+              <li>Community/hospice society bursaries for palliative training.</li>
+              <li>Professional development days from employer scheduling.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="card col-12">
+        <h2>Notes</h2>
+        <details open>
+          <summary><strong>How to use</strong></summary>
+          <ul>
+            <li>Check off tasks as you complete them—your progress auto‑saves to your browser.</li>
+            <li>Click <em>Print</em> to export to PDF for sharing with a manager or mentor.</li>
+            <li>Edit the plan owner name in the header to personalize.</li>
+          </ul>
+        </details>
+      </div>
+    </section>
+
+    <p class="print-hint">Made for Real Ones.....CCA's.... 💙</p>
+  </main>
+
+  <script>
+    // --- Local persistence --- //
+    const STORAGE_KEY = 'cca_goal_map_v1';
+
+    function saveState(){
+      const checks = [...document.querySelectorAll('input[type="checkbox"]')].map(el=>el.checked);
+      const owner = document.getElementById('owner').value;
+      const state = { checks, owner };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      updateProgress();
+    }
+
+    function loadState(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      try{
+        const state = JSON.parse(raw);
+        const boxes = [...document.querySelectorAll('input[type="checkbox"]')];
+        boxes.forEach((el, i)=>{ if(typeof state.checks?.[i] === 'boolean') el.checked = state.checks[i]; });
+        if(state.owner) document.getElementById('owner').value = state.owner;
+      }catch(e){ console.warn('No saved state'); }
+      updateProgress();
+    }
+
+    function updateProgress(){
+      const boxes = [...document.querySelectorAll('input[type="checkbox"]')];
+      const done = boxes.filter(b=>b.checked).length;
+      const pct = boxes.length? Math.round(done/boxes.length*100):0;
+      document.getElementById('readinessBar').style.width = pct + '%';
+      // lightweight KPIs (very rough):
+      document.getElementById('kpi1').textContent = Math.min(6, Math.floor(pct/16)) + ' / 6+';
+      document.getElementById('kpi2').textContent = Math.min(12, Math.floor(pct/8)) + ' / 12+';
+      document.getElementById('kpi3').textContent = Math.min(4, Math.floor(pct/25)) + ' / 4+';
+    }
+
+    document.addEventListener('change', (e)=>{
+      if(e.target.matches('input[type="checkbox"], #owner')) saveState();
+    });
+
+    document.getElementById('saveBtn').addEventListener('click', saveState);
+    document.getElementById('resetBtn').addEventListener('click', ()=>{
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false);
+      saveState();
+    });
+
+    loadState();
+  </script>
+</body>
+</html>
